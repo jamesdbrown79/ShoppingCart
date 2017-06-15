@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ShoppingCart
 {
-    public class Class1
+    public class Offer
     {
+        public int Quantity { get; set; }
+        public double Discount { get; set; }
     }
 }
