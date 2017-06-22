@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ShoppingCart.Tests
 {
@@ -7,32 +8,33 @@ namespace ShoppingCart.Tests
     public class CheckoutTests
     {
         [TestMethod()]
-        public void should_return_total_price()
+        public void should_return_multiple_item_total_price()
         {
             //setup
-            Checkout checkout = new Checkout("AABCDA");
+            List<Product> productCatalogue = Catalogue.ListAllProducts();
+            Checkout checkout = new Checkout(productCatalogue);
 
             //act
-            double result = checkout.CartTotal();
+            checkout.Scan("AABCDA");
+            double result = checkout.Total();
 
             //assert
             Assert.AreEqual(195, result);
         }
 
         [TestMethod()]
-        public void should_return_product_count()
+        public void should_return_single_item_price()
         {
             //setup
-            Checkout checkout = new Checkout("AABCDAD");
+            List<Product> productCatalogue = Catalogue.ListAllProducts();
+            Checkout checkout = new Checkout(productCatalogue);
 
             //act
-            Dictionary<char, int> result = checkout.CountGoods();
+            checkout.Scan("A");
+            double result = checkout.Total();
 
             //assert
-            Assert.AreEqual(3, result['A']);
-            Assert.AreEqual(1, result['B']);
-            Assert.AreEqual(1, result['C']);
-            Assert.AreEqual(2, result['D']);
+            Assert.AreEqual(productCatalogue.FirstOrDefault(p => p.Code == "A").Price, result);
         }
     }
 }

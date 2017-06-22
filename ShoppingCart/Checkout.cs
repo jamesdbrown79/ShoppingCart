@@ -1,36 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShoppingCart
 {
     public class Checkout
     {
-        public string goods { get; set; }
+        private List<Product> productCatalogue;
+        private List<string> scannedItems = new List<string>();
 
-        public Checkout(string goods)
+        public Checkout(List<Product> productCatalogue)
         {
-            this.goods = goods;
+            this.productCatalogue = productCatalogue;
         }
 
-        public Dictionary<char, int> CountGoods()
+        public void Scan(string Items)
         {
-            return goods.GroupBy(g => g).ToDictionary(grp => grp.Key, grp => grp.Count());
-        }
-
-        public double CartTotal()
-        {
-            double total = 0;
-            Dictionary<char, int> items = CountGoods();
-
-            Catalogue catalogue = new Catalogue();
-            List<Product> products = catalogue.ListAllProducts();
+            char[] items = Items.ToCharArray();
 
             foreach (var item in items)
             {
-                Product product = products.FirstOrDefault(p => p.Code == item.Key);
+                scannedItems.Add(item.ToString());
+            }
+        }
+
+        public double Total()
+        {
+            double total = 0;
+            Dictionary<string, int> scannedItemsCount = new Dictionary<string, int>();
+
+            scannedItemsCount = scannedItems.GroupBy(g => g).ToDictionary(grp => grp.Key, grp => grp.Count());
+
+            foreach (var item in scannedItemsCount)
+            {
+                Product product = productCatalogue.FirstOrDefault(p => p.Code == item.Key);
                 total += item.Value * product.Price;
                 if (product.Offer.Quantity > 0)
                 {
