@@ -10,31 +10,29 @@ namespace ShoppingCart.Tests
         [TestMethod()]
         public void should_return_multiple_item_total_price()
         {
-            //setup
+            //arrange
             List<Product> productCatalogue = Catalogue.ListAllProducts();
             Checkout checkout = new Checkout(productCatalogue);
 
             //act
             checkout.Scan("AABCDA");
-            double result = checkout.Total();
 
             //assert
-            Assert.AreEqual(195, result);
+            Assert.AreEqual(195, checkout.Total());
         }
 
         [TestMethod()]
         public void should_return_single_item_price()
         {
-            //setup
+            //arrange
             List<Product> productCatalogue = Catalogue.ListAllProducts();
             Checkout checkout = new Checkout(productCatalogue);
 
             //act
             checkout.Scan("A");
-            double result = checkout.Total();
 
             //assert
-            Assert.AreEqual(productCatalogue.FirstOrDefault(p => p.Code == "A").Price, result);
+            Assert.AreEqual(productCatalogue.FirstOrDefault(p => p.Code == "A").Price, checkout.Total());
         }
     }
 }
